@@ -10,7 +10,7 @@
 <link rel="manifest" id="pwa-manifest"/>
 <link rel="apple-touch-icon" id="apple-icon"/>
 <title>NEON Appointments</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
 <style>
 /* ══════════════════════════════════════
    DESIGN TOKENS — matches NEON inventory
@@ -46,28 +46,28 @@
 *, *::before, *::after {
   box-sizing:border-box; margin:0; padding:0;
   -webkit-tap-highlight-color:transparent;
-  font-family:'Syne',sans-serif;
+  font-family:'Inter',sans-serif;
 }
 html, body { height:100%; overscroll-behavior:none; }
 body { background:var(--page); color:var(--color); transition:background .2s,color .2s; }
 body.locked { overflow:hidden; position:fixed; width:100%; }
 
-/* Force Syne on all form elements — iOS overrides these */
+/* Syne ONLY for NEON brand name */
+.logo-name { font-family:'Syne',sans-serif !important; font-weight:800; }
+
+/* Force Inter on all form elements */
 input, select, textarea, button {
-  font-family:'Syne',sans-serif !important;
+  font-family:'Inter',sans-serif !important;
   -webkit-text-size-adjust:100%;
   touch-action:manipulation;
 }
-/* 16px on inputs prevents iOS zoom on focus */
 input, select, textarea { font-size:16px !important; }
-/* Placeholder inherits Syne */
 ::placeholder,
 ::-webkit-input-placeholder,
-::-moz-placeholder { font-family:'Syne',sans-serif !important; opacity:0.38; }
-
+::-moz-placeholder { font-family:'Inter',sans-serif !important; opacity:0.38; }
 input[type=date]::-webkit-calendar-picker-indicator,
 input[type=time]::-webkit-calendar-picker-indicator { filter:var(--cal); opacity:.5; }
-select option { font-family:'Syne',sans-serif; }
+select option { font-family:'Inter',sans-serif; }
 ::-webkit-scrollbar { width:3px; }
 ::-webkit-scrollbar-thumb { background:#6C63FF55; border-radius:4px; }
 
@@ -177,18 +177,18 @@ select option { font-family:'Syne',sans-serif; }
 .si2 { padding:6px 18px 26px; }
 
 /* ── View sheet ── */
-.shdr   { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:14px; }
-.stitle { font-size:22px; font-weight:800; color:var(--color); letter-spacing:-.4px; }
-.sid    { font-size:11px; font-weight:600; color:var(--muted); margin-top:3px; letter-spacing:.3px; }
-.sdiv   { border-top:1px solid var(--border); padding-top:14px; margin-bottom:16px; }
+.shdr   { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:16px; }
+.stitle { font-size:28px; font-weight:800; color:var(--color); letter-spacing:-.5px; line-height:1.1; }
+.sid    { font-size:11px; font-weight:700; color:var(--muted); margin-top:5px; letter-spacing:.8px; background:var(--pill-off); display:inline-block; padding:2px 8px; border-radius:6px; }
+.sdiv   { border-top:1px solid var(--border); padding-top:16px; margin-bottom:16px; }
 .ig     { display:grid; grid-template-columns:1fr 1fr; gap:0 12px; }
-.ir     { display:flex; gap:9px; align-items:flex-start; margin-bottom:13px; }
-.ii     { font-size:15px; min-width:22px; text-align:center; margin-top:1px; }
-.il     { font-size:10px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.8px; }
-.iv     { font-size:14px; font-weight:700; color:var(--color); margin-top:3px; }
+.ir     { display:flex; gap:10px; align-items:flex-start; margin-bottom:15px; }
+.ii     { font-size:16px; min-width:24px; text-align:center; margin-top:2px; }
+.il     { font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.8px; }
+.iv     { font-size:15px; font-weight:700; color:var(--color); margin-top:4px; }
 .ar     { display:flex; gap:8px; flex-wrap:wrap; }
-.slbl   { font-size:10px; font-weight:700; color:var(--muted); letter-spacing:.8px; text-transform:uppercase; margin-bottom:6px; }
-.spills { display:flex; gap:6px; flex-wrap:wrap; margin-top:4px; margin-bottom:16px; }
+.slbl   { font-size:11px; font-weight:700; color:var(--muted); letter-spacing:.8px; text-transform:uppercase; margin-bottom:8px; }
+.spills { display:flex; gap:6px; flex-wrap:wrap; margin-top:4px; margin-bottom:18px; }
 
 /* ── Form sheet ── */
 .ftitle { font-size:18px; font-weight:800; color:var(--color); letter-spacing:-.3px; }
@@ -230,7 +230,7 @@ select option { font-family:'Syne',sans-serif; }
     <div class="logo-wrap">
       <div class="logo-box">📅</div>
       <div>
-        <div class="logo-name">NEON</div>
+        <div class="logo-name" style="font-size:18px;color:var(--color);">NEON</div>
         <div class="logo-sub">Appointments</div>
       </div>
     </div>
