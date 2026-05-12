@@ -7,12 +7,24 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="apple-mobile-web-app-title" content="NEON Appts"/>
 <meta name="theme-color" content="#09090F" id="theme-meta"/>
-<title>NEON Appointments</title>
 <link rel="manifest" id="pwa-manifest"/>
 <link rel="apple-touch-icon" id="apple-icon"/>
+<title>NEON Appointments</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
 <style>
-/* ── CSS Variables ── */
+/* ══════════════════════════════════════
+   DESIGN TOKENS — matches NEON inventory
+   Font scale:
+     10px / 600  — micro labels (caps)
+     12px / 600  — small meta text
+     13px / 600  — buttons, pills, body
+     14px / 700  — card names, info values
+     16px / 700  — form inputs, section titles
+     20px / 800  — stat numbers
+     22px / 800  — sheet title
+   Weight scale: 400 body · 600 label · 700 heading · 800 display
+══════════════════════════════════════ */
+
 :root {
   --page:#09090F; --surf:#0F0F1A; --border:#1C1C2E;
   --in-bg:#09090F; --in-bdr:#2A2A40;
@@ -29,147 +41,208 @@
   --acc:#6C63FF; --handle:#D4D4EC;
   --cal:none; --up-bg:#FFFBEB; --up-bdr:#FDE68A;
 }
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;font-family:'Syne',sans-serif;}
-html,body{height:100%;overscroll-behavior:none;}
-body{background:var(--page);color:var(--color);transition:background .2s,color .2s;}
-body.locked{overflow:hidden;position:fixed;width:100%;}
-.brand{font-family:'Syne',sans-serif;font-weight:800;}
-input,select,textarea,button{font-family:'Syne',sans-serif!important;-webkit-text-size-adjust:100%;touch-action:manipulation;}
-input,select,textarea{font-size:16px!important;}
-::placeholder,::-webkit-input-placeholder,::-moz-placeholder{font-family:'Syne',sans-serif!important;opacity:0.4;}
+
+/* ── Base reset — Syne on everything ── */
+*, *::before, *::after {
+  box-sizing:border-box; margin:0; padding:0;
+  -webkit-tap-highlight-color:transparent;
+  font-family:'Syne',sans-serif;
+}
+html, body { height:100%; overscroll-behavior:none; }
+body { background:var(--page); color:var(--color); transition:background .2s,color .2s; }
+body.locked { overflow:hidden; position:fixed; width:100%; }
+
+/* Force Syne on all form elements — iOS overrides these */
+input, select, textarea, button {
+  font-family:'Syne',sans-serif !important;
+  -webkit-text-size-adjust:100%;
+  touch-action:manipulation;
+}
+/* 16px on inputs prevents iOS zoom on focus */
+input, select, textarea { font-size:16px !important; }
+/* Placeholder inherits Syne */
+::placeholder,
+::-webkit-input-placeholder,
+::-moz-placeholder { font-family:'Syne',sans-serif !important; opacity:0.38; }
+
 input[type=date]::-webkit-calendar-picker-indicator,
-input[type=time]::-webkit-calendar-picker-indicator{filter:var(--cal);opacity:.5;}
-::-webkit-scrollbar{width:3px;}::-webkit-scrollbar-thumb{background:#6C63FF55;border-radius:4px;}
+input[type=time]::-webkit-calendar-picker-indicator { filter:var(--cal); opacity:.5; }
+select option { font-family:'Syne',sans-serif; }
+::-webkit-scrollbar { width:3px; }
+::-webkit-scrollbar-thumb { background:#6C63FF55; border-radius:4px; }
 
 /* ── Sync bar ── */
-#sync-bar{background:var(--surf);border-bottom:1px solid var(--border);padding:5px 16px;display:flex;align-items:center;gap:7px;font-size:11px;color:var(--muted);}
-.sync-dot{width:7px;height:7px;border-radius:50%;background:#5A5A8A;flex-shrink:0;transition:background .3s;}
-.sync-dot.online{background:#10B981;}
-.sync-dot.syncing{background:#F59E0B;animation:pulse 1s infinite;}
-.sync-dot.offline{background:#EF4444;}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+#sync-bar {
+  background:var(--surf); border-bottom:1px solid var(--border);
+  padding:5px 16px; display:flex; align-items:center; gap:7px;
+  font-size:11px; font-weight:600; color:var(--muted); letter-spacing:.3px;
+}
+.sync-dot { width:7px; height:7px; border-radius:50%; background:#5A5A8A; flex-shrink:0; transition:background .3s; }
+.sync-dot.online  { background:#10B981; }
+.sync-dot.syncing { background:#F59E0B; animation:pulse 1s infinite; }
+.sync-dot.offline { background:#EF4444; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
 
 /* ── Header ── */
-#header{background:var(--surf);border-bottom:1px solid var(--border);padding:13px 16px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;}
-.logo-box{width:36px;height:36px;border-radius:9px;background:linear-gradient(135deg,#6C63FF,#A78BFA);display:flex;align-items:center;justify-content:center;font-size:18px;}
-.logo-wrap{display:flex;align-items:center;gap:10px;}
-.logo-sub{font-size:10px;font-weight:600;color:var(--muted);letter-spacing:2px;text-transform:uppercase;}
-.hdr-btns{display:flex;gap:8px;}
+#header {
+  background:var(--surf); border-bottom:1px solid var(--border);
+  padding:13px 16px; display:flex; justify-content:space-between; align-items:center;
+  position:sticky; top:0; z-index:100;
+}
+.logo-box  { width:38px; height:38px; border-radius:10px; background:linear-gradient(135deg,#6C63FF,#A78BFA); display:flex; align-items:center; justify-content:center; font-size:19px; flex-shrink:0; }
+.logo-wrap { display:flex; align-items:center; gap:11px; }
+.logo-name { font-size:18px; font-weight:800; color:var(--color); letter-spacing:-.3px; }
+.logo-sub  { font-size:10px; font-weight:600; color:var(--muted); letter-spacing:2px; text-transform:uppercase; margin-top:1px; }
+.hdr-btns  { display:flex; gap:8px; }
 
 /* ── Buttons ── */
-.btn-p  {background:var(--acc);color:#fff;border:none;border-radius:9px;padding:10px 16px;font-size:13px;font-weight:600;cursor:pointer;}
-.btn-s  {background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:9px;padding:10px 14px;font-size:13px;font-weight:500;cursor:pointer;}
-.btn-wa {background:#25D366;color:#fff;border:none;border-radius:9px;padding:10px 14px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:7px;}
-.btn-d  {background:#EF4444;color:#fff;border:none;border-radius:9px;padding:10px 14px;font-size:13px;font-weight:600;cursor:pointer;}
-.btn-iwa{background:#25D366;border:none;border-radius:9px;padding:9px 10px;cursor:pointer;color:#fff;flex-shrink:0;display:flex;align-items:center;}
+.btn-p  { background:var(--acc); color:#fff; border:none; border-radius:9px; padding:10px 18px; font-size:13px; font-weight:700; cursor:pointer; }
+.btn-s  { background:transparent; color:var(--muted); border:1px solid var(--border); border-radius:9px; padding:10px 14px; font-size:13px; font-weight:600; cursor:pointer; }
+.btn-wa { background:#25D366; color:#fff; border:none; border-radius:9px; padding:10px 14px; font-size:13px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:7px; }
+.btn-d  { background:#EF4444; color:#fff; border:none; border-radius:9px; padding:10px 14px; font-size:13px; font-weight:700; cursor:pointer; }
+.btn-iwa { background:#25D366; border:none; border-radius:9px; padding:9px 10px; cursor:pointer; color:#fff; flex-shrink:0; display:flex; align-items:center; }
 
-#main{padding:13px 13px 90px;max-width:900px;margin:0 auto;}
+/* ── Main container ── */
+#main { padding:14px 14px 90px; max-width:900px; margin:0 auto; }
 
 /* ── Stats ── */
-#stats{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin-bottom:13px;}
-.sc{background:var(--surf);border:1px solid var(--border);border-radius:11px;padding:10px 6px;text-align:center;}
-.si{font-size:13px;margin-bottom:3px;}
-.sv{font-size:17px;font-weight:700;line-height:1;color:var(--color);}
-.sl{font-size:9px;font-weight:600;color:var(--muted);margin-top:3px;letter-spacing:.5px;}
+#stats { display:grid; grid-template-columns:repeat(5,1fr); gap:8px; margin-bottom:14px; }
+.sc  { background:var(--surf); border:1px solid var(--border); border-radius:12px; padding:12px 6px; text-align:center; }
+.si  { font-size:14px; margin-bottom:4px; line-height:1; }
+.sv  { font-size:20px; font-weight:800; line-height:1; color:var(--color); }
+.sl  { font-size:10px; font-weight:600; color:var(--muted); margin-top:4px; letter-spacing:.4px; text-transform:uppercase; }
 
 /* ── Upcoming ── */
-#upcoming{background:var(--up-bg);border:1px solid var(--up-bdr);border-radius:12px;padding:12px 14px;margin-bottom:13px;display:none;}
-.ut{font-size:11px;font-weight:700;color:#D97706;letter-spacing:1px;text-transform:uppercase;margin-bottom:9px;}
-.ur{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;flex-wrap:wrap;gap:4px;}
-.un{font-size:13px;font-weight:600;color:var(--color);}
-.us{font-size:12px;color:var(--muted);margin-left:7px;}
-.utm{font-size:12px;font-weight:600;color:#D97706;}
-.bs{font-size:10px;font-weight:700;background:#EF4444;color:#fff;border-radius:10px;padding:2px 7px;margin-left:6px;}
+#upcoming { background:var(--up-bg); border:1px solid var(--up-bdr); border-radius:12px; padding:12px 14px; margin-bottom:14px; display:none; }
+.ut  { font-size:10px; font-weight:700; color:#D97706; letter-spacing:1.2px; text-transform:uppercase; margin-bottom:10px; }
+.ur  { display:flex; justify-content:space-between; align-items:center; margin-bottom:7px; flex-wrap:wrap; gap:4px; }
+.un  { font-size:13px; font-weight:700; color:var(--color); }
+.us  { font-size:12px; font-weight:500; color:var(--muted); margin-left:7px; }
+.utm { font-size:12px; font-weight:700; color:#D97706; }
+.bs  { font-size:10px; font-weight:700; background:#EF4444; color:#fff; border-radius:10px; padding:2px 8px; margin-left:6px; }
 
-/* ── Search & Pills ── */
-#search-input{background:var(--surf);border:1px solid var(--in-bdr);color:var(--color);border-radius:10px;padding:10px 14px;width:100%;font-size:16px;outline:none;margin-bottom:10px;}
-#pills{display:flex;gap:7px;overflow-x:auto;padding-bottom:2px;margin-bottom:13px;scrollbar-width:none;}
-#pills::-webkit-scrollbar{display:none;}
-.pill{background:var(--pill-off);color:var(--pill-tx);border:1px solid var(--border);border-radius:20px;padding:5px 13px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;}
-.pill.active{background:var(--acc);color:#fff;border-color:var(--acc);}
+/* ── Search ── */
+#search-input {
+  background:var(--surf); border:1px solid var(--in-bdr); color:var(--color);
+  border-radius:10px; padding:11px 14px; width:100%; outline:none; margin-bottom:10px;
+  font-size:14px; font-weight:500;
+}
 
-/* ── Cards ── */
-.ac{background:var(--surf);border:1px solid var(--border);border-radius:14px;padding:13px 15px;margin-bottom:9px;cursor:pointer;display:flex;justify-content:space-between;align-items:flex-start;gap:8px;}
-.ac.today{border-left:3px solid var(--acc);}
-.cb{flex:1;min-width:0;}
-.ct{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:5px;}
-.cn{font-size:14px;font-weight:700;color:var(--color);}
-.csv{font-size:12px;color:var(--muted);margin-bottom:3px;}
-.cvh{font-size:12px;color:var(--muted);margin-bottom:4px;}
-.cm{display:flex;gap:12px;flex-wrap:wrap;}
-.cd{font-size:12px;font-weight:600;color:var(--acc);}
-.cp{font-size:12px;color:var(--muted);}
-.badge{display:inline-flex;align-items:center;gap:5px;border-radius:20px;padding:3px 10px;font-size:11px;font-weight:600;white-space:nowrap;}
-.bdot{width:5px;height:5px;border-radius:50%;flex-shrink:0;}
-.tag{font-size:10px;font-weight:700;border-radius:10px;padding:1px 7px;}
+/* ── Filter pills ── */
+#pills { display:flex; gap:7px; overflow-x:auto; padding-bottom:2px; margin-bottom:14px; scrollbar-width:none; }
+#pills::-webkit-scrollbar { display:none; }
+.pill        { background:var(--pill-off); color:var(--pill-tx); border:1px solid var(--border); border-radius:20px; padding:6px 14px; font-size:12px; font-weight:700; cursor:pointer; white-space:nowrap; }
+.pill.active { background:var(--acc); color:#fff; border-color:var(--acc); }
 
-/* ── Empty ── */
-#empty{text-align:center;padding:50px 20px;display:none;}
-#footer-note{text-align:center;font-size:11px;color:var(--muted);margin-top:24px;line-height:2;}
+/* ── Appointment cards ── */
+.ac       { background:var(--surf); border:1px solid var(--border); border-radius:14px; padding:14px 15px; margin-bottom:9px; cursor:pointer; display:flex; justify-content:space-between; align-items:flex-start; gap:8px; }
+.ac.today { border-left:3px solid var(--acc); }
+.cb  { flex:1; min-width:0; }
+.ct  { display:flex; align-items:center; gap:7px; flex-wrap:wrap; margin-bottom:6px; }
+.cn  { font-size:14px; font-weight:800; color:var(--color); }
+.csv { font-size:12px; font-weight:600; color:var(--muted); margin-bottom:3px; }
+.cvh { font-size:12px; font-weight:600; color:var(--muted); margin-bottom:5px; }
+.cm  { display:flex; gap:12px; flex-wrap:wrap; }
+.cd  { font-size:12px; font-weight:700; color:var(--acc); }
+.cp  { font-size:12px; font-weight:600; color:var(--muted); }
 
-/* ── Sheets ── */
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:200;display:none;animation:fadeIn .2s ease;}
-.overlay.show{display:block;}
-.sheet{position:fixed;bottom:0;left:0;right:0;z-index:201;background:var(--surf);border-radius:18px 18px 0 0;max-height:85vh;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;display:none;animation:slideUp .25s cubic-bezier(.32,.72,0,1);padding-bottom:env(safe-area-inset-bottom,16px);touch-action:pan-y;}
-.sheet.show{display:block;}
-.sh{width:100%;display:flex;justify-content:center;padding:10px 0 4px;}
-.shb{width:36px;height:4px;border-radius:2px;background:var(--handle);}
-.si2{padding:6px 18px 26px;}
-.shdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;}
-.stitle{font-size:19px;font-weight:700;color:var(--color);letter-spacing:-.2px;}
-.sid{font-size:11px;color:var(--muted);margin-top:2px;}
-.sdiv{border-top:1px solid var(--border);padding-top:14px;margin-bottom:16px;}
-.ig{display:grid;grid-template-columns:1fr 1fr;gap:0 12px;}
-.ir{display:flex;gap:9px;align-items:flex-start;margin-bottom:12px;}
-.ii{font-size:14px;min-width:20px;text-align:center;margin-top:1px;}
-.il{font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;}
-.iv{font-size:14px;font-weight:500;color:var(--color);margin-top:2px;}
-.ar{display:flex;gap:8px;flex-wrap:wrap;}
-.slbl{font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.8px;text-transform:uppercase;margin-bottom:6px;}
-.spills{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px;margin-bottom:16px;}
+/* ── Badges & tags ── */
+.badge { display:inline-flex; align-items:center; gap:5px; border-radius:20px; padding:3px 10px; font-size:11px; font-weight:700; white-space:nowrap; }
+.bdot  { width:5px; height:5px; border-radius:50%; flex-shrink:0; }
+.tag   { font-size:10px; font-weight:800; border-radius:10px; padding:2px 8px; }
 
-/* ── Form ── */
-.fg{display:grid;grid-template-columns:1fr 1fr;gap:11px;}
-.ff{grid-column:1/-1;}
-.fl{font-size:11px;font-weight:600;color:var(--muted);margin-bottom:5px;display:block;letter-spacing:.8px;text-transform:uppercase;}
-.fi{background:var(--in-bg);border:1px solid var(--in-bdr);color:var(--color);border-radius:9px;padding:11px 13px;width:100%;font-size:16px;outline:none;}
-.fi.err{border-color:#EF4444;}
-.fta{resize:none;height:76px;line-height:1.6;}
-.fa{display:flex;gap:9px;margin-top:16px;}
+/* ── Empty state ── */
+#empty { text-align:center; padding:50px 20px; display:none; }
 
-/* ── Delete ── */
-#del-overlay{position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:500;display:none;animation:fadeIn .18s ease;}
-#del-overlay.show{display:flex;align-items:center;justify-content:center;padding:20px;}
-#del-box{background:var(--surf);border:1px solid var(--border);border-radius:16px;padding:24px;width:calc(100% - 40px);max-width:310px;animation:popIn .22s ease;text-align:center;}
+/* ── Footer ── */
+#footer-note { text-align:center; font-size:11px; font-weight:600; color:var(--muted); margin-top:24px; line-height:2; }
+
+/* ── Sheet overlay ── */
+.overlay { position:fixed; inset:0; background:rgba(0,0,0,.78); z-index:200; display:none; animation:fadeIn .2s ease; }
+.overlay.show { display:block; }
+
+/* ── Bottom sheet ── */
+.sheet {
+  position:fixed; bottom:0; left:0; right:0; z-index:201;
+  background:var(--surf); border-radius:18px 18px 0 0;
+  max-height:85vh; overflow-y:auto; overflow-x:hidden;
+  -webkit-overflow-scrolling:touch; display:none;
+  animation:slideUp .25s cubic-bezier(.32,.72,0,1);
+  padding-bottom:env(safe-area-inset-bottom,16px);
+  touch-action:pan-y;
+}
+.sheet.show { display:block; }
+.sh  { width:100%; display:flex; justify-content:center; padding:10px 0 4px; }
+.shb { width:36px; height:4px; border-radius:2px; background:var(--handle); }
+.si2 { padding:6px 18px 26px; }
+
+/* ── View sheet ── */
+.shdr   { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:14px; }
+.stitle { font-size:22px; font-weight:800; color:var(--color); letter-spacing:-.4px; }
+.sid    { font-size:11px; font-weight:600; color:var(--muted); margin-top:3px; letter-spacing:.3px; }
+.sdiv   { border-top:1px solid var(--border); padding-top:14px; margin-bottom:16px; }
+.ig     { display:grid; grid-template-columns:1fr 1fr; gap:0 12px; }
+.ir     { display:flex; gap:9px; align-items:flex-start; margin-bottom:13px; }
+.ii     { font-size:15px; min-width:22px; text-align:center; margin-top:1px; }
+.il     { font-size:10px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.8px; }
+.iv     { font-size:14px; font-weight:700; color:var(--color); margin-top:3px; }
+.ar     { display:flex; gap:8px; flex-wrap:wrap; }
+.slbl   { font-size:10px; font-weight:700; color:var(--muted); letter-spacing:.8px; text-transform:uppercase; margin-bottom:6px; }
+.spills { display:flex; gap:6px; flex-wrap:wrap; margin-top:4px; margin-bottom:16px; }
+
+/* ── Form sheet ── */
+.ftitle { font-size:18px; font-weight:800; color:var(--color); letter-spacing:-.3px; }
+.fg     { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.ff     { grid-column:1/-1; }
+.fl     { font-size:10px; font-weight:700; color:var(--muted); margin-bottom:6px; display:block; letter-spacing:.8px; text-transform:uppercase; }
+.fi     { background:var(--in-bg); border:1px solid var(--in-bdr); color:var(--color); border-radius:9px; padding:12px 13px; width:100%; outline:none; font-size:14px; font-weight:600; }
+.fi.err { border-color:#EF4444; }
+.fta    { resize:none; height:78px; line-height:1.6; }
+.fa     { display:flex; gap:9px; margin-top:16px; }
+
+/* ── Delete dialog ── */
+#del-overlay { position:fixed; inset:0; background:rgba(0,0,0,.78); z-index:500; display:none; animation:fadeIn .18s ease; }
+#del-overlay.show { display:flex; align-items:center; justify-content:center; padding:20px; }
+#del-box { background:var(--surf); border:1px solid var(--border); border-radius:16px; padding:24px; width:calc(100% - 40px); max-width:310px; animation:popIn .22s ease; text-align:center; }
+.dt  { font-size:16px; font-weight:800; color:var(--color); margin-bottom:7px; }
+.ds  { font-size:13px; font-weight:600; color:var(--muted); margin-bottom:20px; }
 
 /* ── Toast ── */
-#toast{position:fixed;top:16px;right:16px;z-index:9999;padding:10px 16px;border-radius:10px;font-size:13px;font-weight:600;color:#fff;box-shadow:0 4px 20px rgba(0,0,0,.3);display:none;animation:fadeIn .2s ease;}
-#toast.show{display:block;}
+#toast { position:fixed; top:16px; right:16px; z-index:9999; padding:10px 16px; border-radius:10px; font-size:13px; font-weight:700; color:#fff; box-shadow:0 4px 20px rgba(0,0,0,.3); display:none; animation:fadeIn .2s ease; }
+#toast.show { display:block; }
 
-@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
-@keyframes fadeIn{from{opacity:0}to{opacity:1}}
-@keyframes popIn{from{transform:scale(.95);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes slideUp { from{transform:translateY(100%)} to{transform:translateY(0)} }
+@keyframes fadeIn  { from{opacity:0} to{opacity:1} }
+@keyframes popIn   { from{transform:scale(.95);opacity:0} to{transform:scale(1);opacity:1} }
 </style>
 </head>
 <body>
 <div id="app">
-  <div id="sync-bar"><div class="sync-dot" id="sync-dot"></div><span id="sync-label">Connecting...</span></div>
 
+  <!-- Sync bar -->
+  <div id="sync-bar">
+    <div class="sync-dot" id="sync-dot"></div>
+    <span id="sync-label">Connecting...</span>
+  </div>
+
+  <!-- Header -->
   <div id="header">
     <div class="logo-wrap">
       <div class="logo-box">📅</div>
       <div>
-        <div class="brand" style="font-size:17px;color:var(--color);">NEON</div>
+        <div class="logo-name">NEON</div>
         <div class="logo-sub">Appointments</div>
       </div>
     </div>
     <div class="hdr-btns">
       <button class="btn-p" onclick="openForm()">+ New</button>
-      <button class="btn-s" onclick="toggleTheme()" id="theme-btn" style="padding:9px 11px;font-size:15px;">☀️</button>
+      <button class="btn-s" onclick="toggleTheme()" id="theme-btn" style="padding:9px 11px;font-size:16px;">☀️</button>
     </div>
   </div>
 
   <div id="main">
+
+    <!-- Stats -->
     <div id="stats">
       <div class="sc"><div class="si">📋</div><div class="sv" id="s-total">0</div><div class="sl">Total</div></div>
       <div class="sc"><div class="si">⏳</div><div class="sv" id="s-pending">0</div><div class="sl">Pending</div></div>
@@ -178,10 +251,16 @@ input[type=time]::-webkit-calendar-picker-indicator{filter:var(--cal);opacity:.5
       <div class="sc"><div class="si">✕</div><div class="sv" id="s-cancel">0</div><div class="sl">Cancel</div></div>
     </div>
 
-    <div id="upcoming"><div class="ut">⏰ Upcoming</div><div id="upcoming-list"></div></div>
+    <!-- Upcoming -->
+    <div id="upcoming">
+      <div class="ut">⏰ Upcoming</div>
+      <div id="upcoming-list"></div>
+    </div>
 
+    <!-- Search -->
     <input id="search-input" placeholder="🔍  Name, phone, vehicle, service..." oninput="render()" type="search" autocomplete="off"/>
 
+    <!-- Pills -->
     <div id="pills">
       <button class="pill active" onclick="setFilter('All',this)">All</button>
       <button class="pill" onclick="setFilter('Pending',this)">Pending</button>
@@ -191,14 +270,19 @@ input[type=time]::-webkit-calendar-picker-indicator{filter:var(--cal);opacity:.5
       <button class="pill" onclick="setFilter('Cancelled',this)">Cancelled</button>
     </div>
 
+    <!-- List -->
     <div id="list"></div>
-    <div id="empty" style="text-align:center;padding:50px 20px;display:none;">
-      <div style="font-size:36px;margin-bottom:10px;">📭</div>
-      <div style="font-size:15px;font-weight:600;color:var(--muted);">No appointments found</div>
-      <div style="font-size:13px;color:var(--muted);margin-top:6px;">Tap + New to add one</div>
+    <div id="empty">
+      <div style="font-size:38px;margin-bottom:12px;">📭</div>
+      <div style="font-size:15px;font-weight:800;color:var(--muted);">No appointments found</div>
+      <div style="font-size:13px;font-weight:600;color:var(--muted);margin-top:6px;">Tap + New to add one</div>
     </div>
 
-    <div id="footer-note">🔥 Synced via Firebase · All devices<br/>📱 <strong>iPhone:</strong> Share → Add to Home Screen<br/>🤖 <strong>Android:</strong> Menu → Add to Home Screen</div>
+    <div id="footer-note">
+      🔥 Synced across all devices via Firebase<br/>
+      📱 <strong>iPhone:</strong> Share → Add to Home Screen<br/>
+      🤖 <strong>Android:</strong> Menu → Add to Home Screen
+    </div>
   </div>
 </div>
 
@@ -208,8 +292,11 @@ input[type=time]::-webkit-calendar-picker-indicator{filter:var(--cal);opacity:.5
   <div class="sh"><div class="shb"></div></div>
   <div class="si2">
     <div class="shdr">
-      <div><div class="stitle" id="v-name"></div><div class="sid" id="v-id"></div></div>
-      <button class="btn-s" onclick="closeView()" style="padding:6px 12px;font-size:16px;">✕</button>
+      <div>
+        <div class="stitle" id="v-name"></div>
+        <div class="sid" id="v-id"></div>
+      </div>
+      <button class="btn-s" onclick="closeView()" style="padding:6px 12px;font-size:15px;font-weight:700;">✕</button>
     </div>
     <div id="v-badge" style="margin-bottom:14px;"></div>
     <div class="slbl">Update Status</div>
@@ -219,7 +306,7 @@ input[type=time]::-webkit-calendar-picker-indicator{filter:var(--cal);opacity:.5
       <div id="v-notes"></div>
     </div>
     <div class="ar">
-      <button class="btn-wa" style="flex:1;justify-content:center;padding:12px;" onclick="waFromView()">
+      <button class="btn-wa" onclick="waFromView()" style="flex:1;justify-content:center;padding:12px;">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.125.558 4.115 1.528 5.836L0 24l6.335-1.652A11.954 11.954 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.002-1.366l-.36-.214-3.726.977.993-3.635-.235-.374A9.818 9.818 0 1112 21.818z"/></svg>
         Send Reminder
       </button>
@@ -235,26 +322,55 @@ input[type=time]::-webkit-calendar-picker-indicator{filter:var(--cal);opacity:.5
   <div class="sh"><div class="shb"></div></div>
   <div class="si2">
     <div class="shdr" style="margin-bottom:18px;">
-      <div style="font-size:16px;font-weight:700;color:var(--color);" id="form-title">New Appointment</div>
-      <button class="btn-s" onclick="closeForm()" style="padding:6px 12px;font-size:16px;">✕</button>
+      <div class="ftitle" id="form-title">New Appointment</div>
+      <button class="btn-s" onclick="closeForm()" style="padding:6px 12px;font-size:15px;font-weight:700;">✕</button>
     </div>
     <div class="fg">
-      <div class="ff"><label class="fl">Customer Name *</label><input class="fi" id="f-name" placeholder="e.g. Kasun Perera"/></div>
-      <div><label class="fl">Phone *</label><input class="fi" id="f-phone" type="tel" placeholder="07X XXX XXXX"/></div>
-      <div><label class="fl">Vehicle</label><input class="fi" id="f-vehicle" placeholder="e.g. Toyota Aqua"/></div>
-      <div class="ff"><label class="fl">Service</label><input class="fi" id="f-service" placeholder="e.g. Head unit install..."/></div>
-      <div><label class="fl">Date *</label><input class="fi" id="f-date" type="date"/></div>
-      <div><label class="fl">Time *</label><input class="fi" id="f-time" type="time"/></div>
-      <div><label class="fl">Status</label>
+      <div class="ff">
+        <label class="fl">Customer Name *</label>
+        <input class="fi" id="f-name" placeholder="e.g. Kasun Perera"/>
+      </div>
+      <div>
+        <label class="fl">Phone *</label>
+        <input class="fi" id="f-phone" type="tel" placeholder="07X XXX XXXX"/>
+      </div>
+      <div>
+        <label class="fl">Vehicle</label>
+        <input class="fi" id="f-vehicle" placeholder="e.g. Toyota Aqua"/>
+      </div>
+      <div class="ff">
+        <label class="fl">Service</label>
+        <input class="fi" id="f-service" placeholder="e.g. Head unit install, subwoofer..."/>
+      </div>
+      <div>
+        <label class="fl">Date *</label>
+        <input class="fi" id="f-date" type="date"/>
+      </div>
+      <div>
+        <label class="fl">Time *</label>
+        <input class="fi" id="f-time" type="time"/>
+      </div>
+      <div>
+        <label class="fl">Status</label>
         <select class="fi" id="f-status">
-          <option>Pending</option><option>Confirmed</option><option>In Progress</option><option>Completed</option><option>Cancelled</option>
+          <option>Pending</option>
+          <option>Confirmed</option>
+          <option>In Progress</option>
+          <option>Completed</option>
+          <option>Cancelled</option>
         </select>
       </div>
-      <div><label class="fl">Deposit (LKR)</label><input class="fi" id="f-deposit" type="number" inputmode="decimal" placeholder="0.00"/></div>
-      <div class="ff"><label class="fl">Notes</label><textarea class="fi fta" id="f-notes" placeholder="Parts needed, special instructions..."></textarea></div>
+      <div>
+        <label class="fl">Deposit (LKR)</label>
+        <input class="fi" id="f-deposit" type="number" inputmode="decimal" placeholder="0.00"/>
+      </div>
+      <div class="ff">
+        <label class="fl">Notes</label>
+        <textarea class="fi fta" id="f-notes" placeholder="Parts needed, special instructions..."></textarea>
+      </div>
     </div>
     <div class="fa">
-      <button class="btn-p" onclick="saveAppt()" id="save-btn" style="flex:1;padding:13px;font-size:14px;">Save Appointment</button>
+      <button class="btn-p" onclick="saveAppt()" id="save-btn" style="flex:1;padding:13px;font-size:14px;font-weight:800;">Save Appointment</button>
       <button class="btn-s" onclick="closeForm()" style="padding:13px 16px;">Cancel</button>
     </div>
   </div>
@@ -263,68 +379,42 @@ input[type=time]::-webkit-calendar-picker-indicator{filter:var(--cal);opacity:.5
 <!-- Delete -->
 <div id="del-overlay" onclick="cancelDelete()">
   <div id="del-box" onclick="event.stopPropagation()">
-    <div style="font-size:30px;margin-bottom:10px;">⚠️</div>
-    <div style="font-size:15px;font-weight:700;color:var(--color);margin-bottom:7px;">Delete Appointment?</div>
-    <div style="font-size:13px;color:var(--muted);margin-bottom:20px;">This cannot be undone.</div>
+    <div style="font-size:32px;margin-bottom:12px;">⚠️</div>
+    <div class="dt">Delete Appointment?</div>
+    <div class="ds">This cannot be undone.</div>
     <div style="display:flex;gap:9px;">
       <button class="btn-d" onclick="doDelete()" style="flex:1;padding:12px;">Delete</button>
       <button class="btn-s" onclick="cancelDelete()" style="flex:1;padding:12px;">Cancel</button>
     </div>
   </div>
 </div>
+
 <div id="toast"></div>
 
 <script>
 /* ══════════════════════════════
-   FIREBASE REST CONFIG
-   No SDK — plain fetch() only
+   FIREBASE REST
 ══════════════════════════════ */
-const FB_URL = 'https://neon-appointment-tracker-default-rtdb.firebaseio.com/appointments';
-
-async function fbGet() {
-  const r = await fetch(`${FB_URL}.json`);
-  const d = await r.json();
-  return d ? Object.values(d) : [];
-}
-async function fbSet(id, data) {
-  await fetch(`${FB_URL}/${id}.json`, {
-    method: 'PUT',
-    headers: {'Content-Type':'application/json'},
-    body: JSON.stringify(data)
-  });
-}
-async function fbPatch(id, data) {
-  await fetch(`${FB_URL}/${id}.json`, {
-    method: 'PATCH',
-    headers: {'Content-Type':'application/json'},
-    body: JSON.stringify(data)
-  });
-}
-async function fbDelete(id) {
-  await fetch(`${FB_URL}/${id}.json`, { method: 'DELETE' });
-}
+const FB = 'https://neon-appointment-tracker-default-rtdb.firebaseio.com/appointments';
+const fbGet    = ()        => fetch(`${FB}.json`).then(r=>r.json()).then(d=>d?Object.values(d):[]);
+const fbSet    = (id,data) => fetch(`${FB}/${id}.json`,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+const fbPatch  = (id,data) => fetch(`${FB}/${id}.json`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+const fbDelete = (id)      => fetch(`${FB}/${id}.json`,{method:'DELETE'});
 
 /* ══════════════════════════════
    STATE
 ══════════════════════════════ */
-let appts        = [];
-let filterStatus = 'All';
-let editId       = null;
-let viewAppt     = null;
-let deleteId     = null;
-let scrollY      = 0;
-let isDark       = true;
-let pollTimer    = null;
+let appts=[], filterStatus='All', editId=null, viewAppt=null, deleteId=null, scrollY=0, isDark=true;
 
-const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-const SD = {
+const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const SD={
   'Pending':     {bg:'#3D2000',tx:'#FCD34D',dot:'#F59E0B'},
   'Confirmed':   {bg:'#0F2040',tx:'#93C5FD',dot:'#3B82F6'},
   'In Progress': {bg:'#1E0A40',tx:'#C4B5FD',dot:'#8B5CF6'},
   'Completed':   {bg:'#002818',tx:'#6EE7B7',dot:'#10B981'},
   'Cancelled':   {bg:'#2A0000',tx:'#FCA5A5',dot:'#EF4444'},
 };
-const SL = {
+const SL={
   'Pending':     {bg:'#FEF3C7',tx:'#92400E',dot:'#F59E0B'},
   'Confirmed':   {bg:'#DBEAFE',tx:'#1E40AF',dot:'#3B82F6'},
   'In Progress': {bg:'#EDE9FE',tx:'#5B21B6',dot:'#8B5CF6'},
@@ -335,51 +425,36 @@ const SL = {
 /* ══════════════════════════════
    SYNC — poll every 10s
 ══════════════════════════════ */
-function setSyncStatus(s) {
-  const dot = document.getElementById('sync-dot');
-  const lbl = document.getElementById('sync-label');
-  dot.className = 'sync-dot ' + s;
-  lbl.textContent = s==='online'  ? '🔥 Synced across all devices'
-                  : s==='syncing' ? 'Syncing...'
-                  : 'Offline — will retry';
+function setSyncStatus(s){
+  document.getElementById('sync-dot').className='sync-dot '+s;
+  document.getElementById('sync-label').textContent=
+    s==='online'?'🔥 Synced across all devices':s==='syncing'?'Syncing...':'Offline — will retry';
 }
-
-async function syncFromServer() {
-  try {
-    setSyncStatus('syncing');
-    const data = await fbGet();
-    appts = data;
-    setSyncStatus('online');
-    render();
-  } catch(e) {
-    setSyncStatus('offline');
-  }
+async function syncFromServer(){
+  try{ setSyncStatus('syncing'); appts=await fbGet(); setSyncStatus('online'); render(); }
+  catch{ setSyncStatus('offline'); }
 }
-
-function startPolling() {
-  syncFromServer();
-  pollTimer = setInterval(syncFromServer, 10000);
-}
+function startPolling(){ syncFromServer(); setInterval(syncFromServer,10000); }
 
 /* ══════════════════════════════
    HELPERS
 ══════════════════════════════ */
-function genId()    { return 'APT-' + Date.now().toString(36).toUpperCase(); }
-function todayStr() { const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
-function tomStr()   { const d=new Date(); d.setDate(d.getDate()+1); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
-function fmtDate(d) { if(!d)return'—'; const[y,m,day]=d.split('-'); return `${day} ${MONTHS[+m-1]} ${y}`; }
-function fmtTime(t) { if(!t)return''; const[h,m]=t.split(':').map(Number); return `${h%12||12}:${String(m).padStart(2,'0')} ${h>=12?'PM':'AM'}`; }
-function within2h(dt,tm){ if(!dt||!tm)return false; const d=new Date(`${dt}T${tm}`)-new Date(); return d>0&&d<=7200000; }
-function esc(s)     { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-function badge(st)  { const c=(isDark?SD:SL)[st]||(isDark?SD:SL)['Pending']; return `<span class="badge" style="background:${c.bg};color:${c.tx};"><span class="bdot" style="background:${c.dot};"></span>${st}</span>`; }
-function waico()    { return `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.125.558 4.115 1.528 5.836L0 24l6.335-1.652A11.954 11.954 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.002-1.366l-.36-.214-3.726.977.993-3.635-.235-.374A9.818 9.818 0 1112 21.818z"/></svg>`; }
+const genId    = ()     => 'APT-'+Date.now().toString(36).toUpperCase();
+const todayStr = ()     => { const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; };
+const tomStr   = ()     => { const d=new Date(); d.setDate(d.getDate()+1); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; };
+const fmtDate  = d      => { if(!d)return'—'; const[y,m,day]=d.split('-'); return `${day} ${MONTHS[+m-1]} ${y}`; };
+const fmtTime  = t      => { if(!t)return''; const[h,m]=t.split(':').map(Number); return `${h%12||12}:${String(m).padStart(2,'0')} ${h>=12?'PM':'AM'}`; };
+const within2h = (d,t)  => { if(!d||!t)return false; const x=new Date(`${d}T${t}`)-new Date(); return x>0&&x<=7200000; };
+const esc      = s      => (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const badge    = st     => { const c=(isDark?SD:SL)[st]||(isDark?SD:SL)['Pending']; return `<span class="badge" style="background:${c.bg};color:${c.tx};"><span class="bdot" style="background:${c.dot};"></span>${st}</span>`; };
+const waIco    = ()     => `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.125.558 4.115 1.528 5.836L0 24l6.335-1.652A11.954 11.954 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.002-1.366l-.36-.214-3.726.977.993-3.635-.235-.374A9.818 9.818 0 1112 21.818z"/></svg>`;
 
-function sendWA(appt) {
-  const raw   = appt.phone.replace(/[\s\-()+]/g,'');
-  const phone = raw.startsWith('0') ? '94'+raw.slice(1) : raw;
-  const msg   = [`Hello ${appt.customerName}! 👋`,``,`Reminder from *NEON Car Audio & Video*.`,``,`*Your Appointment*`,
-    appt.service?`Service : ${appt.service}`:null, appt.vehicle?`Vehicle : ${appt.vehicle}`:null,
-    `Date    : ${fmtDate(appt.date)}`, appt.time?`Time    : ${fmtTime(appt.time)}`:null,``,
+function sendWA(appt){
+  const raw=appt.phone.replace(/[\s\-()+]/g,'');
+  const phone=raw.startsWith('0')?'94'+raw.slice(1):raw;
+  const msg=[`Hello ${appt.customerName}! 👋`,``,`Reminder from *NEON Car Audio & Video*.`,``,`*Your Appointment*`,
+    appt.service?`Service : ${appt.service}`:null,appt.vehicle?`Vehicle : ${appt.vehicle}`:null,
+    `Date    : ${fmtDate(appt.date)}`,appt.time?`Time    : ${fmtTime(appt.time)}`:null,``,
     `Please arrive a few minutes early. Reply here to reschedule.`,``,`Thank you for choosing NEON! 🚗`
   ].filter(l=>l!==null).join('\n');
   const a=document.createElement('a'); a.href=`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`; a.target='_blank'; a.rel='noopener noreferrer'; document.body.appendChild(a); a.click(); document.body.removeChild(a);
@@ -388,11 +463,11 @@ function sendWA(appt) {
 /* ══════════════════════════════
    THEME
 ══════════════════════════════ */
-function toggleTheme() {
+function toggleTheme(){
   isDark=!isDark;
   document.documentElement.setAttribute('data-theme',isDark?'dark':'light');
-  document.getElementById('theme-btn').textContent = isDark?'☀️':'🌙';
-  document.getElementById('theme-meta').content   = isDark?'#09090F':'#F3F3F8';
+  document.getElementById('theme-btn').textContent=isDark?'☀️':'🌙';
+  document.getElementById('theme-meta').content=isDark?'#09090F':'#F3F3F8';
   try{localStorage.setItem('neon_theme',isDark?'dark':'light');}catch{}
   render();
 }
@@ -409,14 +484,17 @@ function unlockScroll(){ document.body.classList.remove('locked'); document.body
 function showToast(msg,err=false){ const t=document.getElementById('toast'); t.textContent=msg; t.style.background=err?'#EF4444':'#10B981'; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),3000); }
 
 /* ══════════════════════════════
-   FILTER & RENDER
+   FILTER + RENDER
 ══════════════════════════════ */
 function setFilter(f,btn){ filterStatus=f; document.querySelectorAll('#pills .pill').forEach(p=>p.classList.remove('active')); btn.classList.add('active'); render(); }
 
-function render() {
-  const q=( document.getElementById('search-input').value||'').toLowerCase();
+function render(){
+  const q=(document.getElementById('search-input').value||'').toLowerCase();
   const today=todayStr(), tom=tomStr();
-  const filtered=appts.filter(a=>{ const ms=!q||[a.customerName,a.phone,a.vehicle,a.service].some(v=>v&&v.toLowerCase().includes(q)); return ms&&(filterStatus==='All'||a.status===filterStatus); }).sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));
+  const filtered=appts.filter(a=>{
+    const ms=!q||[a.customerName,a.phone,a.vehicle,a.service].some(v=>v&&v.toLowerCase().includes(q));
+    return ms&&(filterStatus==='All'||a.status===filterStatus);
+  }).sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));
 
   document.getElementById('s-total').textContent     = appts.length;
   document.getElementById('s-pending').textContent   = appts.filter(a=>a.status==='Pending').length;
@@ -426,12 +504,40 @@ function render() {
 
   const soon=appts.filter(a=>(a.status==='Pending'||a.status==='Confirmed')&&(a.date===today||a.date===tom||within2h(a.date,a.time))).sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time)).slice(0,3);
   document.getElementById('upcoming').style.display=soon.length?'block':'none';
-  document.getElementById('upcoming-list').innerHTML=soon.map(a=>`<div class="ur"><div><span class="un">${esc(a.customerName)}</span>${a.service?`<span class="us">${esc(a.service)}</span>`:''}</div><div style="display:flex;align-items:center;"><span class="utm">${a.date===today?'Today':'Tomorrow'}${a.time?' · '+fmtTime(a.time):''}</span>${within2h(a.date,a.time)?'<span class="bs">Soon</span>':''}</div></div>`).join('');
+  document.getElementById('upcoming-list').innerHTML=soon.map(a=>`
+    <div class="ur">
+      <div><span class="un">${esc(a.customerName)}</span>${a.service?`<span class="us">${esc(a.service)}</span>`:''}</div>
+      <div style="display:flex;align-items:center;">
+        <span class="utm">${a.date===today?'Today':'Tomorrow'}${a.time?' · '+fmtTime(a.time):''}</span>
+        ${within2h(a.date,a.time)?'<span class="bs">Soon</span>':''}
+      </div>
+    </div>`).join('');
 
   const le=document.getElementById('list'), ee=document.getElementById('empty');
   if(!filtered.length){le.innerHTML='';ee.style.display='block';return;}
   ee.style.display='none';
-  le.innerHTML=filtered.map(a=>{ const it=a.date===today,s=within2h(a.date,a.time); return `<div class="ac${it?' today':''}" onclick="openView('${a.id}')"><div class="cb"><div class="ct"><span class="cn">${esc(a.customerName)}</span>${badge(a.status)}${s?`<span class="tag" style="background:#EF4444;color:#fff;">Soon</span>`:''}${it&&!s?`<span class="tag" style="background:#6C63FF;color:#fff;">Today</span>`:''}</div>${a.service?`<div class="csv">🔧 ${esc(a.service)}</div>`:''}${a.vehicle?`<div class="cvh">🚗 ${esc(a.vehicle)}</div>`:''}<div class="cm"><span class="cd">📅 ${fmtDate(a.date)}</span>${a.time?`<span class="cd">🕐 ${fmtTime(a.time)}</span>`:''}${a.phone?`<span class="cp">📞 ${esc(a.phone)}</span>`:''}</div></div><button class="btn-iwa" onclick="event.stopPropagation();sendWA(appts.find(x=>x.id==='${a.id}'))">${waico()}</button></div>`; }).join('');
+  le.innerHTML=filtered.map(a=>{
+    const it=a.date===today, s=within2h(a.date,a.time);
+    return `
+    <div class="ac${it?' today':''}" onclick="openView('${a.id}')">
+      <div class="cb">
+        <div class="ct">
+          <span class="cn">${esc(a.customerName)}</span>
+          ${badge(a.status)}
+          ${s?`<span class="tag" style="background:#EF4444;color:#fff;">Soon</span>`:''}
+          ${it&&!s?`<span class="tag" style="background:#6C63FF;color:#fff;">Today</span>`:''}
+        </div>
+        ${a.service?`<div class="csv">🔧 ${esc(a.service)}</div>`:''}
+        ${a.vehicle?`<div class="cvh">🚗 ${esc(a.vehicle)}</div>`:''}
+        <div class="cm">
+          <span class="cd">📅 ${fmtDate(a.date)}</span>
+          ${a.time?`<span class="cd">🕐 ${fmtTime(a.time)}</span>`:''}
+          ${a.phone?`<span class="cp">📞 ${esc(a.phone)}</span>`:''}
+        </div>
+      </div>
+      <button class="btn-iwa" onclick="event.stopPropagation();sendWA(appts.find(x=>x.id==='${a.id}'))">${waIco()}</button>
+    </div>`;
+  }).join('');
 }
 
 /* ══════════════════════════════
@@ -442,10 +548,21 @@ function openView(id){
   document.getElementById('v-name').textContent=viewAppt.customerName;
   document.getElementById('v-id').textContent=viewAppt.id;
   document.getElementById('v-badge').innerHTML=badge(viewAppt.status);
-  document.getElementById('v-status-pills').innerHTML=['Pending','Confirmed','In Progress','Completed','Cancelled'].map(s=>`<button class="pill${viewAppt.status===s?' active':''}" onclick="changeStatus('${s}')">${s}</button>`).join('');
-  const rows=[viewAppt.service?{i:'🔧',l:'Service',v:viewAppt.service}:null,viewAppt.vehicle?{i:'🚗',l:'Vehicle',v:viewAppt.vehicle}:null,{i:'📅',l:'Date',v:fmtDate(viewAppt.date)},viewAppt.time?{i:'🕐',l:'Time',v:fmtTime(viewAppt.time)}:null,viewAppt.phone?{i:'📞',l:'Phone',v:viewAppt.phone}:null,viewAppt.deposit?{i:'💵',l:'Deposit',v:'Rs. '+parseFloat(viewAppt.deposit).toLocaleString()}:null].filter(Boolean);
-  document.getElementById('v-info-grid').innerHTML=rows.map(r=>`<div class="ir"><span class="ii">${r.i}</span><div><div class="il">${r.l}</div><div class="iv">${esc(r.v)}</div></div></div>`).join('');
-  document.getElementById('v-notes').innerHTML=viewAppt.notes?`<div class="ir"><span class="ii">📝</span><div><div class="il">Notes</div><div class="iv">${esc(viewAppt.notes)}</div></div></div>`:'';
+  document.getElementById('v-status-pills').innerHTML=
+    ['Pending','Confirmed','In Progress','Completed','Cancelled'].map(s=>
+      `<button class="pill${viewAppt.status===s?' active':''}" onclick="changeStatus('${s}')">${s}</button>`).join('');
+  const rows=[
+    viewAppt.service?{i:'🔧',l:'Service',v:viewAppt.service}:null,
+    viewAppt.vehicle?{i:'🚗',l:'Vehicle',v:viewAppt.vehicle}:null,
+    {i:'📅',l:'Date',v:fmtDate(viewAppt.date)},
+    viewAppt.time?{i:'🕐',l:'Time',v:fmtTime(viewAppt.time)}:null,
+    viewAppt.phone?{i:'📞',l:'Phone',v:viewAppt.phone}:null,
+    viewAppt.deposit?{i:'💵',l:'Deposit',v:'Rs. '+parseFloat(viewAppt.deposit).toLocaleString()}:null,
+  ].filter(Boolean);
+  document.getElementById('v-info-grid').innerHTML=rows.map(r=>`
+    <div class="ir"><span class="ii">${r.i}</span><div><div class="il">${r.l}</div><div class="iv">${esc(r.v)}</div></div></div>`).join('');
+  document.getElementById('v-notes').innerHTML=viewAppt.notes?`
+    <div class="ir"><span class="ii">📝</span><div><div class="il">Notes</div><div class="iv">${esc(viewAppt.notes)}</div></div></div>`:'';
   lockScroll();
   document.getElementById('view-overlay').classList.add('show');
   document.getElementById('view-sheet').classList.add('show');
@@ -454,10 +571,8 @@ function closeView(){ document.getElementById('view-overlay').classList.remove('
 
 async function changeStatus(status){
   if(!viewAppt)return;
-  setSyncStatus('syncing');
-  viewAppt.status=status;
-  appts=appts.map(a=>a.id===viewAppt.id?{...a,status}:a);
-  render(); openView(viewAppt.id);
+  viewAppt.status=status; appts=appts.map(a=>a.id===viewAppt.id?{...a,status}:a);
+  render(); openView(viewAppt.id); setSyncStatus('syncing');
   try{ await fbPatch(viewAppt.id,{status}); setSyncStatus('online'); showToast('Status → '+status); }catch{ setSyncStatus('offline'); }
 }
 function waFromView(){ if(viewAppt)sendWA(viewAppt); }
@@ -470,8 +585,7 @@ function confirmDelete(){ deleteId=viewAppt?.id; document.getElementById('del-ov
 function cancelDelete() { deleteId=null; document.getElementById('del-overlay').classList.remove('show'); }
 async function doDelete(){
   if(!deleteId)return;
-  setSyncStatus('syncing');
-  appts=appts.filter(a=>a.id!==deleteId); render(); cancelDelete(); closeView();
+  appts=appts.filter(a=>a.id!==deleteId); render(); cancelDelete(); closeView(); setSyncStatus('syncing');
   try{ await fbDelete(deleteId); setSyncStatus('online'); showToast('Deleted.',true); }catch{ setSyncStatus('offline'); }
 }
 
@@ -505,89 +619,43 @@ async function saveAppt(){
   const time=document.getElementById('f-time').value;
   let ok=true;
   ['f-name','f-phone','f-date','f-time'].forEach(id=>document.getElementById(id).classList.remove('err'));
-  if(!name) {document.getElementById('f-name').classList.add('err'); ok=false;}
-  if(!phone){document.getElementById('f-phone').classList.add('err');ok=false;}
-  if(!date) {document.getElementById('f-date').classList.add('err'); ok=false;}
-  if(!time) {document.getElementById('f-time').classList.add('err'); ok=false;}
+  if(!name) { document.getElementById('f-name').classList.add('err');  ok=false; }
+  if(!phone){ document.getElementById('f-phone').classList.add('err'); ok=false; }
+  if(!date) { document.getElementById('f-date').classList.add('err');  ok=false; }
+  if(!time) { document.getElementById('f-time').classList.add('err');  ok=false; }
   if(!ok)return;
   const id=editId||genId();
-  const appt={id,customerName:name,phone,vehicle:document.getElementById('f-vehicle').value.trim(),service:document.getElementById('f-service').value.trim(),date,time,status:document.getElementById('f-status').value,deposit:document.getElementById('f-deposit').value,notes:document.getElementById('f-notes').value.trim(),createdAt:editId?(appts.find(a=>a.id===editId)?.createdAt||new Date().toISOString()):new Date().toISOString()};
-  // Optimistic update
+  const appt={id,customerName:name,phone,
+    vehicle:document.getElementById('f-vehicle').value.trim(),
+    service:document.getElementById('f-service').value.trim(),
+    date,time,status:document.getElementById('f-status').value,
+    deposit:document.getElementById('f-deposit').value,
+    notes:document.getElementById('f-notes').value.trim(),
+    createdAt:editId?(appts.find(a=>a.id===editId)?.createdAt||new Date().toISOString()):new Date().toISOString()
+  };
   if(editId) appts=appts.map(a=>a.id===editId?appt:a);
   else appts=[appt,...appts];
-  render(); closeForm();
-  setSyncStatus('syncing');
-  try{ await fbSet(id,appt); setSyncStatus('online'); showToast(editId?'Updated.':'Saved.'); }catch{ setSyncStatus('offline'); showToast('Saved locally, sync pending.'); }
+  render(); closeForm(); setSyncStatus('syncing');
+  try{ await fbSet(id,appt); setSyncStatus('online'); showToast(editId?'Updated.':'Saved.'); }
+  catch{ setSyncStatus('offline'); showToast('Saved locally, sync pending.'); }
 }
 
 /* ══════════════════════════════
-   PWA — Icon + Manifest
+   PWA ICON + MANIFEST
 ══════════════════════════════ */
-function setupPWA() {
-  /* Draw the NEON app icon on a canvas */
-  const canvas = document.createElement('canvas');
-  canvas.width = 512; canvas.height = 512;
-  const ctx = canvas.getContext('2d');
-
-  /* Rounded rect background */
-  const grad = ctx.createLinearGradient(0, 0, 512, 512);
-  grad.addColorStop(0, '#6C63FF');
-  grad.addColorStop(1, '#A78BFA');
-  ctx.beginPath();
-  ctx.roundRect(0, 0, 512, 512, 110);
-  ctx.fillStyle = grad;
-  ctx.fill();
-
-  /* Calendar icon area */
-  ctx.fillStyle = 'rgba(255,255,255,0.15)';
-  ctx.beginPath();
-  ctx.roundRect(96, 130, 320, 280, 36);
-  ctx.fill();
-
-  /* Calendar top bar */
-  ctx.fillStyle = 'rgba(255,255,255,0.9)';
-  ctx.beginPath();
-  ctx.roundRect(96, 130, 320, 80, [36, 36, 0, 0]);
-  ctx.fill();
-
-  /* NEON text on top bar */
-  ctx.fillStyle = '#6C63FF';
-  ctx.font = 'bold 54px sans-serif';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillText('NEON', 256, 172);
-
-  /* Calendar dots */
-  const dotColor = 'rgba(255,255,255,0.85)';
-  [[170,270],[256,270],[342,270],[170,340],[256,340],[342,340]].forEach(([x,y]) => {
-    ctx.beginPath();
-    ctx.arc(x, y, 18, 0, Math.PI*2);
-    ctx.fillStyle = dotColor;
-    ctx.fill();
-  });
-
-  const iconUrl = canvas.toDataURL('image/png');
-
-  /* Set apple touch icon */
-  document.getElementById('apple-icon').href = iconUrl;
-
-  /* Set PWA manifest */
-  const manifest = {
-    name: 'NEON Appointments',
-    short_name: 'NEON Appts',
-    description: 'NEON Car Audio & Video — Appointment Tracker',
-    start_url: '.',
-    display: 'standalone',
-    orientation: 'portrait',
-    background_color: '#09090F',
-    theme_color: '#6C63FF',
-    icons: [
-      { src: iconUrl, sizes: '192x192', type: 'image/png', purpose: 'any maskable' },
-      { src: iconUrl, sizes: '512x512', type: 'image/png', purpose: 'any maskable' },
-    ]
-  };
-  const blob = new Blob([JSON.stringify(manifest)], { type: 'application/manifest+json' });
-  document.getElementById('pwa-manifest').href = URL.createObjectURL(blob);
+function setupPWA(){
+  const c=document.createElement('canvas'); c.width=512; c.height=512;
+  const x=c.getContext('2d');
+  const g=x.createLinearGradient(0,0,512,512); g.addColorStop(0,'#6C63FF'); g.addColorStop(1,'#A78BFA');
+  x.beginPath(); x.roundRect(0,0,512,512,110); x.fillStyle=g; x.fill();
+  x.fillStyle='rgba(255,255,255,0.15)'; x.beginPath(); x.roundRect(96,130,320,280,36); x.fill();
+  x.fillStyle='rgba(255,255,255,0.92)'; x.beginPath(); x.roundRect(96,130,320,80,[36,36,0,0]); x.fill();
+  x.fillStyle='#6C63FF'; x.font='bold 52px sans-serif'; x.textAlign='center'; x.textBaseline='middle'; x.fillText('NEON',256,172);
+  [[170,270],[256,270],[342,270],[170,340],[256,340],[342,340]].forEach(([px,py])=>{ x.beginPath(); x.arc(px,py,18,0,Math.PI*2); x.fillStyle='rgba(255,255,255,0.85)'; x.fill(); });
+  const ico=c.toDataURL('image/png');
+  document.getElementById('apple-icon').href=ico;
+  const m={name:'NEON Appointments',short_name:'NEON Appts',description:'NEON Car Audio & Video — Appointment Tracker',start_url:'.',display:'standalone',orientation:'portrait',background_color:'#09090F',theme_color:'#6C63FF',icons:[{src:ico,sizes:'192x192',type:'image/png'},{src:ico,sizes:'512x512',type:'image/png'}]};
+  document.getElementById('pwa-manifest').href=URL.createObjectURL(new Blob([JSON.stringify(m)],{type:'application/manifest+json'}));
 }
 
 /* ══════════════════════════════
